@@ -1,0 +1,14 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    # Ensures type safety by adding strict checks: https://dart.dev/language/type-system
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    always_require_non_null_named_parameters: error
+    annotate_overrides: error
+    avoid_catching_errors: error
+    avoid_empty_else: error
+    always_use_package_imports: false
