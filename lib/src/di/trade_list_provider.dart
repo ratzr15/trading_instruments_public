@@ -17,6 +17,7 @@ import 'package:trading_instruments/src/presentation/components/price/bloc/price
 import 'package:trading_instruments/src/presentation/mapper/price_display_mapper.dart';
 import 'package:trading_instruments/src/presentation/mapper/trade_item_display_mapper.dart';
 import 'package:trading_instruments/src/presentation/trade_list_screen.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class TradeListProvider extends StatelessWidget {
   const TradeListProvider({super.key});
@@ -99,6 +100,8 @@ TradeListScreenBloc _initListBloc(BuildContext context) {
 abstract class _Constants {
   static const sixtySeconds = Duration(seconds: 60);
   static const baseUrl = 'https://finnhub.io';
+  static const url =
+      'wss://ws.finnhub.io/?token=crjeknhr01qnnbrrnhogcrjeknhr01qnnbrrnhp0';
 }
 
 // Init methods
@@ -123,8 +126,11 @@ ObserveRealTimePriceUseCase _initPriceUseCase(BuildContext context) {
 }
 
 PriceBloc _initPriceBloc(BuildContext context) {
+  final wsUrl = Uri.parse(_Constants.url);
+
   return PriceBloc(
     observeRealTimePriceUseCase: context.read(),
     displayMapper: _initPriceDisplayMapper(),
+    channel: WebSocketChannel.connect(wsUrl),
   );
 }
