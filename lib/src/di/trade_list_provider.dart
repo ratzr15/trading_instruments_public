@@ -75,11 +75,7 @@ TradeSymbolsDataSource _initTradeSymbolRemoteDataSource() {
 }
 
 ApiClient get apiClient {
-  var dio = Dio(BaseOptions(
-    receiveTimeout: _Constants.fiveSeconds,
-    connectTimeout: _Constants.fiveSeconds,
-    sendTimeout: _Constants.fiveSeconds,
-  ));
+  var dio = Dio();
   return ApiClientImpl(dio);
 }
 
@@ -101,7 +97,7 @@ TradeListScreenBloc _initListBloc(BuildContext context) {
 }
 
 abstract class _Constants {
-  static const fiveSeconds = Duration(seconds: 60);
+  static const sixtySeconds = Duration(seconds: 60);
   static const baseUrl = 'https://finnhub.io';
 }
 
