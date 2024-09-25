@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trading_instruments/src/presentation/bloc/trade_list_screen_bloc.dart';
-import 'package:trading_instruments/src/presentation/components/price/price_widget.dart';
+import 'package:trading_instruments/src/presentation/components/cubit_price_widget/trade_price_widget.dart';
 import 'package:trading_instruments/src/presentation/models/trade_item_display_model.dart';
 import 'package:utils/utils.dart';
 
@@ -137,7 +137,7 @@ class _TradeListLoadedWidget extends StatelessWidget {
                   Dimens.small,
                 ),
                 child: SizedBox(
-                  child: PriceWidget(
+                  child: TradePriceWidget(
                     symbol: item.symbol,
                   ),
                 ),

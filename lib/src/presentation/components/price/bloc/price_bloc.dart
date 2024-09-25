@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trading_instruments/src/domain/usecase/observe_real_time_price_use_case.dart';
 import 'package:trading_instruments/src/presentation/components/price/bloc/price_event.dart';
@@ -8,6 +10,9 @@ class PriceBloc extends Bloc<PriceEvent, PriceState> {
   final ObserveRealTimePriceUseCase observeRealTimePriceUseCase;
   final PriceDisplayMapper displayMapper;
 
+  // A map to track separate streams for each symbol
+  final Map<String, StreamSubscription<dynamic>> _symbolSubscriptions = {};
+
   PriceBloc({
     required this.observeRealTimePriceUseCase,
     required this.displayMapper,
@@ -17,18 +22,23 @@ class PriceBloc extends Bloc<PriceEvent, PriceState> {
     });
 
     on<SubscribeToPrice>((event, emit) async {
-      observeRealTimePriceUseCase(event.symbol)?.asBroadcastStream().listen(
-        (dynamic message) {
+      await emit.forEach<dynamic>(
+        observeRealTimePriceUseCase(event.symbol)!,
+        onData: (message) {
           final price = displayMapper(message);
-
-          emit(PriceLoaded(
-            price.data.first.price.toString(),
-          ));
+          return PriceLoaded(price.data.first.price.toString());
         },
-        onError: (error) {
-          emit(PriceError('N/A'));
-        },
+        onError: (error, stackTrace) => PriceError('N/A'),
       );
     });
+  }
+
+  @override
+  Future<void> close() {
+    // Cancel all subscriptions when the bloc is closed
+    for (final subscription in _symbolSubscriptions.values) {
+      subscription.cancel();
+    }
+    return super.close();
   }
 }
